@@ -11,8 +11,8 @@ pipeline {
         stage('build') {
             steps {
                     withCredentials([usernamePassword(credentialsId: 'jenkins_on_rpi', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh script: '''echo $PASSWORD | sudo -S rootki-scanner''',
-                    label: 'runVirusScan'
+                    sh script: '''echo $PASSWORD | sudo -S rootkit-scanner''',
+                    label: 'rootkitScan'
                     }
                 }
         }
