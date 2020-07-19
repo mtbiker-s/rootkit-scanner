@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    environment {
+        toEmail = 'carloesanchez@gmail.com'
+        fromEmail = 'jenkins@rpi-local.edu'
+        //backupLocation = '/home/pi'
+        hostName = 'rpi'
+    }
+
+    stages {
+        stage('build') {
+            steps {
+                    withCredentials([usernamePassword(credentialsId: 'jenkins_on_rpi', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh script: '''echo $PASSWORD | sudo -S rootki-scanner''',
+                    label: 'runVirusScan'
+                    }
+                }
+        }
+        stage('notification'){
+            steps {
+                    emailext attachLog: true,
+                    body: "Rootkit Scanner ran on ${hostName}\n More info at: ${env.BUILD_URL}", 
+                    subject: 'Rootkit Scan Completed', 
+                    to: "${toEmail}"
+            }
+        }
+    }
+}
