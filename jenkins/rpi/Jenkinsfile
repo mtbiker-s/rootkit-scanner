@@ -3,7 +3,6 @@ pipeline {
     environment {
         toEmail = 'carloesanchez@gmail.com'
         fromEmail = 'jenkins@rpi-local.edu'
-        //backupLocation = '/home/pi'
         hostName = 'rpi'
     }
 
@@ -18,8 +17,8 @@ pipeline {
         }
         stage('notification'){
             steps {
-                    emailext attachLog: true,
-                    body: "Rootkit Scanner ran on ${hostName}\n More info at: ${env.BUILD_URL}", 
+                    //emailext attachLog: true,
+                    emailext body: "Rootkit Scanner ran on ${hostName}\n More info at: ${env.BUILD_URL}", 
                     subject: 'Rootkit Scan Completed', 
                     to: "${toEmail}"
             }
