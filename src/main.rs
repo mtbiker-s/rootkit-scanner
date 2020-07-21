@@ -7,9 +7,9 @@ fn main(){
 	// Process updating rkhunter to latest rootkit check
 	println!();
 	println!("Attempting to update rkhunter...");
-	let mut command = "rkhunter";
+	let command = "rkhunter"; // Not using mut because var will get used again
 	let mut options = ["--update"].to_vec(); // need to specify that its a Vec with .to_vec()
-	let mut expect_msg = command.to_owned() + " command failed to process!";
+	let  expect_msg = command.to_owned() + " command failed to process!"; // Not using mut because var will get used again
 	run_command(command, options, &expect_msg);
 	println!();
 	println!("rkhunter update completed!");
