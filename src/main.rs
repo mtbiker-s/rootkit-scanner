@@ -1,40 +1,47 @@
 use std::process::Command;
 
-fn main() {
-    println!("Attempting to scan for rootkits with rkhunter");
+// Rust program that will do a rootkit scan with
+// the command rkhunter
+fn main(){
 
-    update();
-	scan();
-}
-
-fn update() {
-  	let mut rkh  = Command::new("rkhunter");
-
-	println!("");
+	// Process updating rkhunter to latest rootkit check
+	println!();
 	println!("Attempting to update rkhunter...");
-	rkh.arg("--update");
-	rkh.status().expect("process failed to execute");
-
+	let mut command = "rkhunter";
+	let mut options = ["--update"].to_vec(); // need to specify that its a Vec with .to_vec()
+	let mut expect_msg = command.to_owned() + " command failed to process!";
+	run_command(command, options, &expect_msg);
 	println!();
 	println!("rkhunter update completed!");
- 	
-}
 
-fn scan() {
-	let mut rkh  = Command::new("rkhunter");
-
-	println!("");
+	// Process rootkit scan with rkhunter
+	println!();
 	println!("Attempting to rootkit scan with rkhunter...");
-	// Execute `ls` in the current directory of the program.
-	
-	rkh.arg("-c");
-	rkh.arg("--enable");
-	rkh.arg("all");
-	rkh.arg("--rwo");
-	rkh.arg("--sk");
-	rkh.status().expect("rkhunter failed to execute!");
-
+	// no need for command because we are using rkhunter again set previously
+	// no need for expect_msg because we are using the previously set one again
+	options = ["-c","--enable","all","--rwo","--sk"].to_vec(); // options are changing so mutable comes in handy
+	run_command(command, options, &expect_msg);
 	println!();
 	println!("rootkit scan completed!");
-
 }
+
+// Will run the command and parameters you pass it
+// It expect the parameters 
+// command - command you want to run
+// options - options for the command
+// expect_msg - message for .expect()
+fn run_command(command: &str, options: Vec<&str>, expect_msg: &str){
+
+	let mut runner = Command::new(command); // making a mutable because it might need to add options
+
+	if options.len() > 0 {
+		// Only add options if options are greater than 0
+		for opt in options {
+			runner.arg(opt);
+		}
+	}
+	
+	// execute the command and generate error message if it fails
+	runner.status().expect(expect_msg);
+}
+
